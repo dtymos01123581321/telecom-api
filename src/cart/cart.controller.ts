@@ -7,9 +7,16 @@ export class CartController {
 
   constructor() {
     this.router.post("/items", (req, res) => {
-      const { productId, quantity } = req.body;
-      const result = this.service.addItem(productId, quantity);
-      res.json(result);
+      try {
+        const { productId, quantity } = req.body;
+        if (!productId || typeof quantity !== "number") {
+          return res.status(400).json({ error: "Invalid productId or quantity" });
+        }
+        const result = this.service.addItem(productId, quantity);
+        res.status(200).json(result);
+      } catch (err) {
+        res.status(500).json({ error: (err as Error).message });
+      }
     });
 
     this.router.get("/", (req, res) => {
