@@ -1,0 +1,45 @@
+# compiled output
+dist
+node_modules
+static-assets
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
+
+# IDEs and editors
+.projectґґ
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+
+# Python
+__pycache__
+
+# dotenv
+.env
+.env.disabled.*
+.env.local.*
+
+# tests
+/tests/fixtures
+
+airconai-server.zip
+.aider*
