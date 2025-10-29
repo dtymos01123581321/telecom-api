@@ -6,11 +6,15 @@ export class CartService {
   addItem(productId: string, quantity: number = 1) {
     if (quantity <= 0) throw new Error("Quantity must be positive");
     this.client.addItem(productId, quantity);
-    return this.client.getContext();
+    const ctx = this.client.getContext();
+    const { _meta, ...items } = ctx;
+    return items;
   }
 
   getCart() {
-    return this.client.getContext();
+    const ctx = this.client.getContext();
+    const { _meta, ...items } = ctx;
+    return items;
   }
 
   clear() {
