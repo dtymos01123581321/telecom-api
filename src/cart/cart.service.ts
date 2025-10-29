@@ -3,7 +3,8 @@ import { SalesforceCartClient } from "./salesforceCartClient";
 export class CartService {
   private client = new SalesforceCartClient();
 
-  addItem(productId: string, quantity: number) {
+  addItem(productId: string, quantity: number = 1) {
+    if (quantity <= 0) throw new Error("Quantity must be positive");
     this.client.addItem(productId, quantity);
     return this.client.getContext();
   }
