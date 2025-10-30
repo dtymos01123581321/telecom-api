@@ -1,44 +1,47 @@
 # Telecom Experience API
 
-This project implements a **simplified in-memory Experience API layer** for a telecom cart system.  
-It’s written in **Node.js (v20+) and TypeScript**, following modular architecture principles and mimicking Salesforce cart behavior without real API calls.
+This project implements a **simplified in-memory Experience API layer** for a telecom cart system.
+It’s built in **Node.js (v20+) and TypeScript**, following clean modular architecture principles and mimicking Salesforce cart behavior without real API calls.
 
 ---
 
-## 🧠 Overview
+## Overview
 
 The API provides cart management functionality — adding, viewing, and clearing items — through a lightweight service layer and a mock `SalesforceCartClient`.
 
-All operations are **in-memory** and designed to demonstrate architectural understanding rather than production readiness.
+All operations are **in-memory** and designed to demonstrate **architecture, testing, and API design clarity** — not production persistence.
 
 ---
 
-## ⚙️ Tech Stack
+## Tech Stack
 
-- **Node.js 20+**
-- **TypeScript**
-- **Express 5**
-- **Jest / ts-jest** for testing
+* **Node.js 20+**
+* **TypeScript**
+* **Express 5**
+* **Jest / ts-jest / Supertest** for testing
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 telecom-experience-api/
 ├── src/
-│   ├── index.ts                    # Entry point
+│   ├── index.ts                     # Entry point + /health endpoint
 │   └── cart/
-│       ├── cart.controller.ts      # HTTP routes for /cart
-│       ├── cart.service.ts         # Business logic
-│       └── salesforceCartClient.ts # Mock Salesforce cart client
+│       ├── cart.controller.ts       # REST endpoints
+│       ├── cart.service.ts          # Business logic layer
+│       └── salesforceCartClient.ts  # Mock Salesforce cart client
 │
 ├── tests/
-│   └── cart.service.spec.ts        # Unit tests
+│   ├── unit/
+│   │   └── cart.service.spec.ts     # Unit tests for service logic
+│   └── integration/
+│       └── app.spec.ts              # Integration tests via Express
 │
-├── SPEC-A-architecture.md          # Architecture design document
-├── SPEC-B-api.md                   # API specification
-├── PROMPTS.md                      # AI prompts used to generate specs
+├── SPEC-A-architecture.md           # Architecture design document
+├── SPEC-B-api.md                    # API specification
+├── PROMPTS.md                       # Prompts used to generate documentation
 ├── tsconfig.json
 ├── package.json
 └── README.md
@@ -46,47 +49,51 @@ telecom-experience-api/
 
 ---
 
-## 🚀 Run Locally
+## Run Locally
 
-### 1️⃣ Install dependencies
+### 1. Install dependencies
+
 ```bash
 npm install
 ```
 
-### 2️⃣ Run the API
+### 2. Run the API
+
 ```bash
 npm run start
 ```
 
 Server runs at [http://localhost:3000](http://localhost:3000)
 
-### 3️⃣ Run in dev mode
+### 3. Run in dev mode
+
 (with auto-reload)
+
 ```bash
 npm run dev
 ```
 
-### 4️⃣ Run tests
-```bash
-npm run test
-```
-
 ---
 
-## 🧩 Available Endpoints
+## Endpoints
 
-| Method | Endpoint          | Description              |
-|--------|--------------------|--------------------------|
-| **POST** | `/cart/items`     | Add an item to the cart  |
-| **GET**  | `/cart`           | Get current cart state   |
-| **DELETE** | `/cart`         | Clear the entire cart    |
+| Method     | Endpoint      | Description               |
+| ---------- | ------------- | ------------------------- |
+| **GET**    | `/health`     | Returns uptime and status |
+| **POST**   | `/cart/items` | Add or update a cart item |
+| **GET**    | `/cart`       | Get current cart state    |
+| **DELETE** | `/cart`       | Clear all cart items      |
 
-Example:
+**Example:**
+
 ```bash
-curl -X POST http://localhost:3000/cart/items      -H "Content-Type: application/json"      -d '{"productId": "A123", "quantity": 2}'
+curl -X POST http://localhost:3000/cart/items \
+     -H "Content-Type: application/json" \
+     -d '{"productId": "A123", "quantity": 2}'
 ```
 
-Response:
+**Response:**
+
 ```json
 {
   "A123": 2
@@ -95,27 +102,42 @@ Response:
 
 ---
 
-## 🧪 Tests
+## Testing
 
-Unit tests verify:
-- Item addition and quantity tracking  
-- Clearing the cart  
-- Proper in-memory behavior of SalesforceCartClient  
+This project includes both **unit** and **integration** tests.
 
-Run:
-```bash
-npm run test
-```
+| Type        | Command                    | Description                        |
+| ----------- | -------------------------- | ---------------------------------- |
+| Unit        | `npm run test:unit`        | Tests service logic and validation |
+| Integration | `npm run test:integration` | Tests full Express endpoints       |
+| All         | `npm test`                 | Runs both suites sequentially      |
 
----
+### Example coverage:
 
-## 🧱 Design Notes
-
-- Architecture documented in **SPEC-A-architecture.md**
-- API contracts defined in **SPEC-B-api.md**
-- All prompts and iterations recorded in **PROMPTS.md**
-- Fully isolated in-memory logic (no DB, no external APIs)
-- Each layer (controller → service → client) is testable independently
+* Add / Clear / Get cart operations
+* Validation for invalid payloads
+* `/health` endpoint status check
+* Internal `_meta` verification (timestamps, expiry)
 
 ---
 
+## Design Notes
+
+* Clean three-layer architecture (Controller → Service → Client)
+* Fully isolated in-memory logic (no DB, no external APIs)
+* `_meta` context included internally, not exposed via API
+* `/health` endpoint for uptime and integration testing
+* Separated test structure for clarity and maintainability
+* Documentation generated via structured prompts
+
+---
+
+## Documentation
+
+| File                       | Purpose                               |
+| -------------------------- | ------------------------------------- |
+| **SPEC-A-architecture.md** | Architecture overview                 |
+| **SPEC-B-api.md**          | API endpoints and contracts           |
+| **PROMPTS.md**             | Original prompt history and reasoning |
+
+---
